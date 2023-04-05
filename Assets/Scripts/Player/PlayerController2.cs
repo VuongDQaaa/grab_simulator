@@ -16,6 +16,7 @@ public class PlayerController2 : MonoBehaviour
     [SerializeField] WheelCollider backWheelCollider;
     [SerializeField] Transform frontWheelTrans;
     [SerializeField] Transform backWheelTrans;
+    [SerializeField] Animator animator;
     private Rigidbody rb;
     [Header("Other")]
     public List<Wheel> wheels;
@@ -27,7 +28,17 @@ public class PlayerController2 : MonoBehaviour
     }
     private void Update() {
         GetInput();
-        
+        if(_turnInput <0){
+            animator.SetBool("turnLeft", true);
+            animator.SetBool("turnRight", false);
+        }else if(_turnInput > 0)
+        {
+            animator.SetBool("turnRight", true);
+            animator.SetBool("turnLeft", false);
+        }else{
+            animator.SetBool("turnRight", false);
+            animator.SetBool("turnLeft", false);
+        }
     }
     public enum ControllMode{
         keyBoard,

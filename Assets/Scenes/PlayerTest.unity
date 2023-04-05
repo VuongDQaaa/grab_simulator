@@ -129,7 +129,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh23128
+  m_Name: pb_Mesh23164
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -46221,6 +46221,7 @@ GameObject:
   - component: {fileID: 758952189}
   - component: {fileID: 758952186}
   - component: {fileID: 758952185}
+  - component: {fileID: 758952190}
   m_Layer: 0
   m_Name: Player2
   m_TagString: Untagged
@@ -46297,6 +46298,7 @@ MonoBehaviour:
   backWheelCollider: {fileID: 1040754598}
   frontWheelTrans: {fileID: 366350814}
   backWheelTrans: {fileID: 1633861925}
+  animator: {fileID: 758952190}
   wheels:
   - wheelMess: {fileID: 366350813}
     wheelCollider: {fileID: 349654227}
@@ -46305,6 +46307,26 @@ MonoBehaviour:
     wheelCollider: {fileID: 1040754598}
     axel: 1
   controll: 1
+--- !u!95 &758952190
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 758952184}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 2bff06ecfe4c3794bb418d5fe8460d5a, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
 --- !u!1 &805045458
 GameObject:
   m_ObjectHideFlags: 0
@@ -48986,7 +49008,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh23114
+  m_Name: pb_Mesh23122
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
