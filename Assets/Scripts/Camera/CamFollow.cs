@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class CamFollow : MonoBehaviour
 {
+    [Header("Camera Setting")] 
     [SerializeField] float _camMoveSpeed;
     [SerializeField] float _camRotationSpeed;
+    [Header("Component")]
     [SerializeField] Vector3 moveOffSet;
     [SerializeField] Vector3 RotationOffSet;
     [SerializeField] Transform camTarget;

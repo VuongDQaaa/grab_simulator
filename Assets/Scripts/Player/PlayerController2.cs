@@ -8,7 +8,7 @@ public class PlayerController2 : MonoBehaviour
     [SerializeField] float _acceleration = 30f;
     [SerializeField] float _brakeAcceleration = 50f;
     [SerializeField] float _turnSpeed = 1f;
-    [SerializeField] float _maxTurnAngle = 45f;
+    [SerializeField] float _maxTurnAngle = 30f;
     [SerializeField] float _speed = 30;
     [SerializeField] float _brakeForce = 300;
     [Header("Component")]
@@ -17,6 +17,9 @@ public class PlayerController2 : MonoBehaviour
     [SerializeField] Transform frontWheelTrans;
     [SerializeField] Transform backWheelTrans;
     [SerializeField] Animator animator;
+    [SerializeField] GameObject brakeLight;
+    [SerializeField] AudioSource audioBrake;
+    [SerializeField] AudioClip brakeSound;
     private Rigidbody rb;
     [Header("Other")]
     public List<Wheel> wheels;
@@ -25,6 +28,7 @@ public class PlayerController2 : MonoBehaviour
     public ControllMode controll;
     private void Start() {
         rb = GetComponent<Rigidbody>();
+        audioBrake.clip = brakeSound;
     }
     private void Update() {
         GetInput();
@@ -39,6 +43,13 @@ public class PlayerController2 : MonoBehaviour
             animator.SetBool("turnRight", false);
             animator.SetBool("turnLeft", false);
         }
+    }
+    private void FixedUpdate() {
+        Moving();
+        Turning();
+        Braking();
+        UpdateWheel(frontWheelCollider,frontWheelTrans);
+        UpdateWheel(backWheelCollider,backWheelTrans);
     }
     public enum ControllMode{
         keyBoard,
@@ -66,17 +77,11 @@ public class PlayerController2 : MonoBehaviour
     public void TouchTurnInput(float _input){
         _turnInput = _input;
     }
-    private void LateUpdate() {
-        Moving();
-        Turning();
-        Braking();
-        UpdateWheel(frontWheelCollider,frontWheelTrans);
-        UpdateWheel(backWheelCollider,backWheelTrans);
-    }
     void Moving(){
         foreach(var _wheel in wheels){
             _wheel.wheelCollider.motorTorque = _moveInput * _acceleration * _speed * Time.fixedDeltaTime;
         }
+        
     }
     void Turning(){
         foreach(var _wheel in wheels){
@@ -91,10 +96,16 @@ public class PlayerController2 : MonoBehaviour
         //androi, còn test trên máy tính thì bỏ ra, như thế xe sẽ k phanh lại để có thể thử rẽ trái phải
             foreach(var _wheel in wheels){
                 _wheel.wheelCollider.brakeTorque = _brakeForce *_brakeAcceleration * Time.fixedDeltaTime;
+                brakeLight.SetActive(true);
+            }
+            if(audioBrake.isPlaying == false){
+                audioBrake.Play();
             }
         }else{
              foreach(var _wheel in wheels){
                 _wheel.wheelCollider.brakeTorque = 0;
+                brakeLight.SetActive(false);
+                
             }
         }
     }
