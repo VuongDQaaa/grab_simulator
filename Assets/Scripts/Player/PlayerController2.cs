@@ -1,6 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.EventSystems;
+using TMPro;
 
 public class PlayerController2 : MonoBehaviour
 {
@@ -21,17 +24,58 @@ public class PlayerController2 : MonoBehaviour
     [SerializeField] AudioSource audioBrake;
     [SerializeField] AudioClip brakeSound;
     private Rigidbody rb;
+    [Header("Timer")]
+    [SerializeField] float _timeValue = 120;
+    [SerializeField] TextMeshProUGUI timerUI;
+    [Header("Score")]
+    [SerializeField] SO scoreSO;
+    [SerializeField] TextMeshProUGUI scoreText;
+    [SerializeField] float _ScoreStart = 1200;
+    private float _currentScore;
     [Header("Other")]
+    public static PlayerController2 instace;
     public List<Wheel> wheels;
     float _moveInput;
     float _turnInput;
     public ControllMode controll;
+    private void Awake() {
+        if( instace == null){
+            instace = this;
+        }
+    }
     private void Start() {
         rb = GetComponent<Rigidbody>();
         audioBrake.clip = brakeSound;
+        PointDown();
     }
     private void Update() {
+        _currentScore = _ScoreStart;
+        scoreSO.value = _currentScore;
         GetInput();
+        SetAnimation();
+        //timer
+        if(_timeValue > 0 ){
+            _timeValue -= Time.deltaTime;
+        }else{
+            _timeValue = 0;
+        }
+        CountDisPlay(_timeValue);
+        if(_timeValue == 0){
+            _ScoreStart = 0;
+            Invoke("Delay", 1f);
+        }
+    }
+    void Delay(){
+        GameManager.instance.GameOver();
+    }
+    private void FixedUpdate() {
+        Moving();
+        Turning();
+        Braking();
+        UpdateWheel(frontWheelCollider,frontWheelTrans);
+        UpdateWheel(backWheelCollider,backWheelTrans);
+    }
+    void SetAnimation(){
         if(_turnInput <0){
             animator.SetBool("turnLeft", true);
             animator.SetBool("turnRight", false);
@@ -44,13 +88,17 @@ public class PlayerController2 : MonoBehaviour
             animator.SetBool("turnLeft", false);
         }
     }
-    private void FixedUpdate() {
-        Moving();
-        Turning();
-        Braking();
-        UpdateWheel(frontWheelCollider,frontWheelTrans);
-        UpdateWheel(backWheelCollider,backWheelTrans);
+    public void PointDown(){
+        if(_ScoreStart >= 0){
+            scoreText.text = "Point Left: " + scoreSO.value; //đặt hiển thị
+            _ScoreStart--;
+            Invoke("PointDown", 0.5f); //giảm 1 điểm mỗi 0.1s
+            // getScore = _ScoreStart;
+        } else{
+            _ScoreStart = 0;
+        }
     }
+    #region Setting enum
     public enum ControllMode{
         keyBoard,
         TouchPad
@@ -59,6 +107,8 @@ public class PlayerController2 : MonoBehaviour
         Front,
         Back
     }
+    #endregion
+    #region Setting PlayerControll Input
     [System.Serializable]
     public struct Wheel{
         public GameObject wheelMess;
@@ -73,10 +123,13 @@ public class PlayerController2 : MonoBehaviour
     }
     public void TouchMoveInput(float _input){
         _moveInput = _input;
+        Debug.Log("move");
     }
     public void TouchTurnInput(float _input){
         _turnInput = _input;
+        Debug.Log("turn");
     }
+    
     void Moving(){
         foreach(var _wheel in wheels){
             _wheel.wheelCollider.motorTorque = _moveInput * _acceleration * _speed * Time.fixedDeltaTime;
@@ -92,7 +145,7 @@ public class PlayerController2 : MonoBehaviour
         }
     }
     void Braking(){
-        if(Input.GetKey(KeyCode.Space)){ //|| _moveInput == 0 *note: thêm vào nếu test trên phone, 
+        if(Input.GetKey(KeyCode.Space )){ //|| _moveInput == 0 *note: thêm vào nếu test trên phone, 
         //androi, còn test trên máy tính thì bỏ ra, như thế xe sẽ k phanh lại để có thể thử rẽ trái phải
             foreach(var _wheel in wheels){
                 _wheel.wheelCollider.brakeTorque = _brakeForce *_brakeAcceleration * Time.fixedDeltaTime;
@@ -116,4 +169,39 @@ public class PlayerController2 : MonoBehaviour
         trans.position = pos;
         trans.rotation = rotation;
     }
+    #endregion
+    #region Timer
+    void CountDisPlay(float _timeToDisPlay){
+        if(_timeToDisPlay <0 ){
+            _timeToDisPlay = 0;
+        }else if(_timeToDisPlay > 0){
+            _timeToDisPlay += 1;
+        }
+
+        float _minutes = Mathf.FloorToInt(_timeToDisPlay / 60);
+        float _seconds = Mathf.FloorToInt(_timeToDisPlay % 60);
+
+        timerUI.text = string.Format("{0:00} : {1:00}", _minutes, _seconds);
+        
+    }
+    public void TakeTime(float _timeDown){
+        _timeValue -= _timeDown;
+    }
+    public void AddTime(float _timeUp){
+        _timeValue += _timeUp;
+    }
+    #endregion
+
+    private void OnTriggerEnter(Collider other) {
+        if(other.gameObject.tag == "Red"){
+            Destroy(other.gameObject);
+            TakeTime(10);
+            PlayerHealth.instance.TakeDamage(20);
+        }
+        if(other.gameObject.tag == "TimeUp"){
+            Destroy(other.gameObject);
+            AddTime(30);
+        }
+    }
 }
+

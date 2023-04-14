@@ -15,6 +15,11 @@ public class BikeSound : MonoBehaviour
     [Header("Component")]
     private Rigidbody bikeRb;
     private AudioSource audioSource;
+    public static BikeSound instance;
+    private void Awake() {
+        if(instance == null)
+            instance = this;
+    }
     private void Start() {
         audioSource = GetComponent<AudioSource>();
         bikeRb = GetComponent<Rigidbody>();
