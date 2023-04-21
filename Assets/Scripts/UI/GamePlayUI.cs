@@ -8,9 +8,11 @@ using TMPro;
 public class GamePlayUI : MonoBehaviour
 {
     public static GamePlayUI instance;
-    [SerializeField] private Button _pauseButton, _resumeButton, _backButton, _getRewardButton, _restartButton, _quitButton;
-    [SerializeField] private GameObject _pauseMenu, _winMenu, _loseMenu;
-    [SerializeField] private TextMeshProUGUI goldText;
+    [SerializeField] private Button _pauseButton, _resumeButton, _backButton, _getRewardButton, _restartButton, _quitButton, _acceptButton, _cancelButton;
+    [SerializeField] private GameObject _pauseMenu, _winMenu, _loseMenu, _missionMenu;
+    [SerializeField] private TextMeshProUGUI _goldText, _missionName, _gold, _missionTime;
+    public GameObject missionProvider;
+    public bool newMission;
     void MakeInstance()
     {
         if (instance == null)
@@ -21,6 +23,7 @@ public class GamePlayUI : MonoBehaviour
 
     private void Awake()
     {
+        newMission = false;
         MakeInstance();
     }
 
@@ -29,11 +32,32 @@ public class GamePlayUI : MonoBehaviour
         ShowLoseMenu();
         ShowWinMenu();
         DisplayGold();
+        ShowMission();
+        DisplayMissionInfor();
     }
 
     private void DisplayGold()
     {
-        goldText.text = GameManager.instance.GetGold().ToString();
+        _goldText.text = GameManager.instance.GetGold().ToString();
+    }
+
+    private void DisplayMissionInfor()
+    {
+        _missionName.text = "Mission name: " + CurrentMission.instance.missionName;
+        _gold.text = "Gold: " + CurrentMission.instance.missonGold;
+        _missionTime.text = "Time: " + CurrentMission.instance.CurrentMissionTime + " Seconds";
+    }
+
+    private void ShowMission()
+    {
+        if(newMission == true)
+        {
+            _missionMenu.SetActive(true);
+        }
+        else
+        {
+            _missionMenu.SetActive(false);
+        }
     }
 
     private void ShowLoseMenu()
@@ -50,6 +74,22 @@ public class GamePlayUI : MonoBehaviour
         {
             _winMenu.SetActive(true);
         }
+    }
+
+    public void AcceptButton()
+    {
+        newMission = false;
+        CurrentMission.instance.spawnLocation = true;
+        GameObject _missionProvider = GameObject.FindGameObjectWithTag("Mission");
+        if (_missionProvider != null)
+        {
+            Destroy(_missionProvider);
+        }
+    }
+
+    public void CancelButton()
+    {
+        newMission = false;
     }
 
     public void PauseButton()
@@ -75,14 +115,14 @@ public class GamePlayUI : MonoBehaviour
 
     public void GetReward()
     {
-        if(GameManager.instance != null)
+        if (GameManager.instance != null)
         {
             int newGold = GameManager.instance.GetGold() + CurrentMission.instance.missonGold;
             GameManager.instance.SetGold(newGold);
         }
+        MissionSpawner.instance.SpawnNew = true;
         CurrentMission.instance.ResetCurrentMission();
         _winMenu.SetActive(false);
-
     }
 
     public void RestartButton()

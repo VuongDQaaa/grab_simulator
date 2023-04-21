@@ -29,7 +29,7 @@ public class MissionSpawner : MonoBehaviour
 
     private void SpawnMissionProvider()
     {
-        if (SpawnNew == true && CurrentMission.instance.isCompleted == true)
+        if (SpawnNew == true)
         {
             int randomNum = Random.Range(0, 10);
             Instantiate(_missionProvider, missionLocation[randomNum], Quaternion.identity);

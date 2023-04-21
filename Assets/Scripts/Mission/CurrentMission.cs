@@ -5,9 +5,9 @@ using TMPro;
 
 public class CurrentMission : MonoBehaviour
 {
+    public static CurrentMission instance;
     [SerializeField] private GameObject _pickUp, _finish, _timer;
     [SerializeField] private TextMeshProUGUI _timeText;
-    public static CurrentMission instance;
     public bool isStarted, isCompleted, spawnLocation, failed;
     public string missionName;
     public int missonGold;
@@ -16,7 +16,7 @@ public class CurrentMission : MonoBehaviour
 
     private void MakeInstance()
     {
-        if (instance == null)
+        if(instance == null)
         {
             instance = this;
         }
@@ -81,6 +81,7 @@ public class CurrentMission : MonoBehaviour
 
     public void ResetCurrentMission()
     {
+        _timer.SetActive(false);
         isStarted = false;
         isCompleted = false;
         spawnLocation = false;

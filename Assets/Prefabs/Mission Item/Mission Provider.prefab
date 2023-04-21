@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 8368473974022975961}
   m_Layer: 0
   m_Name: Mission Provider
-  m_TagString: Untagged
+  m_TagString: Mission
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -63,7 +63,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: c7073a0301dcfc64c9d15d7044099863, type: 2}
   - {fileID: 11400000, guid: c144ef87958ace94c9be33f9b63bd750, type: 2}
   - {fileID: 11400000, guid: 51872b91ec4e9ea4aaf671f2bc765e5b, type: 2}
-  accepted: 0
 --- !u!1 &5679036185072591382
 GameObject:
   m_ObjectHideFlags: 0

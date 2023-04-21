@@ -9,6 +9,8 @@ TagManager:
   - Controller
   - Destroy
   - Car
+  - Mission
+  - Pick Up
   layers:
   - Default
   - TransparentFX
