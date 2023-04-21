@@ -15,4 +15,6 @@ public class UnitsData : ScriptableObject
     public bool IsMusicVolume { get => _isMusicVolume; set => _isMusicVolume = value;}
     public int SoundVolume { get => _soundVolume; set => _soundVolume = value;}
     public bool IsSoundVolume { get => _isSoundVolume; set => _isSoundVolume = value;}
+    public int CarVolume { get => _soundVolume; set => _soundVolume = value;}
+    public bool IsCarVolume { get => _isSoundVolume; set => _isSoundVolume = value;}
 }
