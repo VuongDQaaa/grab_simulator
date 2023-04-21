@@ -5,19 +5,36 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
-    [SerializeField] GameObject loseUI;
-    [SerializeField] GameObject winUI;
-    private void Awake() {
-        if(instance == null){
+    private const string _saveGold = "0";
+    private void Awake()
+    {
+        if (instance != null)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
             instance = this;
+            DontDestroyOnLoad(gameObject);
         }
     }
-    public void GameOver(){
-        loseUI.SetActive(true);
-        Time.timeScale = 0f;
+
+    void IsFirstTimeStart()
+    {
+        if (!PlayerPrefs.HasKey("IsFirstTimeStart"))
+        {
+            PlayerPrefs.SetInt(_saveGold, 0);
+            PlayerPrefs.SetInt("IsFirstTimeStart", 0);
+        }
     }
-    public void Winning(){
-        winUI.SetActive(true);
-        Time.timeScale = 0f;
+
+    public void SetGold(int gold)
+    {
+        PlayerPrefs.SetInt(_saveGold, gold);
+    }
+
+    public int GetGold()
+    {
+        return PlayerPrefs.GetInt(_saveGold);
     }
 }

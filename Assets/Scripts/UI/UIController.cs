@@ -14,8 +14,9 @@ public class UIController : MonoBehaviour
         LoadScene.SetActive(false);
     }
 
+// Change Load Game Play from mission to main game play
     public void _LoadGamePlay() {
-        StartCoroutine(_LoadScene(1));
+        SceneManager.LoadScene("Game Play");
     }
 
     public void _LoadMenu(){

@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5538791236819234041}
   - component: {fileID: 3606110076839760910}
   - component: {fileID: 7452144996404060564}
+  - component: {fileID: 7414281670442576353}
   m_Layer: 0
   m_Name: Car Side (1)
   m_TagString: Car
@@ -82,6 +83,19 @@ MonoBehaviour:
   maxSensorLength: 50
   hitDistance: 0
   _currentNode: 0
+--- !u!65 &7414281670442576353
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 554439069012542135}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.92, y: 1.03, z: 4.48}
+  m_Center: {x: 0, y: 0.7, z: 0}
 --- !u!1 &818767427975949595
 GameObject:
   m_ObjectHideFlags: 0

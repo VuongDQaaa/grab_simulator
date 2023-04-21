@@ -62,7 +62,4 @@ public class PlayerHealth : MonoBehaviour
             health += healingPoints;
 
     }
-    private void Delay(){
-        GameManager.instance.GameOver();
-    }
 }

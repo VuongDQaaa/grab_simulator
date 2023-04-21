@@ -1,8 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.EventSystems;
 using TMPro;
 
 public class PlayerController2 : MonoBehaviour
@@ -46,27 +43,12 @@ public class PlayerController2 : MonoBehaviour
     private void Start() {
         rb = GetComponent<Rigidbody>();
         audioBrake.clip = brakeSound;
-        PointDown();
     }
     private void Update() {
         _currentScore = _ScoreStart;
         scoreSO.value = _currentScore;
         GetInput();
         SetAnimation();
-        //timer
-        if(_timeValue > 0 ){
-            _timeValue -= Time.deltaTime;
-        }else{
-            _timeValue = 0;
-        }
-        CountDisPlay(_timeValue);
-        if(_timeValue == 0){
-            _ScoreStart = 0;
-            Invoke("Delay", 1f);
-        }
-    }
-    void Delay(){
-        GameManager.instance.GameOver();
     }
     private void FixedUpdate() {
         Moving();
@@ -86,16 +68,6 @@ public class PlayerController2 : MonoBehaviour
         }else{
             animator.SetBool("turnRight", false);
             animator.SetBool("turnLeft", false);
-        }
-    }
-    public void PointDown(){
-        if(_ScoreStart >= 0){
-            scoreText.text = "Point Left: " + scoreSO.value; //đặt hiển thị
-            _ScoreStart--;
-            Invoke("PointDown", 0.5f); //giảm 1 điểm mỗi 0.1s
-            // getScore = _ScoreStart;
-        } else{
-            _ScoreStart = 0;
         }
     }
     #region Setting enum
@@ -168,21 +140,6 @@ public class PlayerController2 : MonoBehaviour
         col.GetWorldPose(out pos, out rotation);
         trans.position = pos;
         trans.rotation = rotation;
-    }
-    #endregion
-    #region Timer
-    void CountDisPlay(float _timeToDisPlay){
-        if(_timeToDisPlay <0 ){
-            _timeToDisPlay = 0;
-        }else if(_timeToDisPlay > 0){
-            _timeToDisPlay += 1;
-        }
-
-        float _minutes = Mathf.FloorToInt(_timeToDisPlay / 60);
-        float _seconds = Mathf.FloorToInt(_timeToDisPlay % 60);
-
-        timerUI.text = string.Format("{0:00} : {1:00}", _minutes, _seconds);
-        
     }
     public void TakeTime(float _timeDown){
         _timeValue -= _timeDown;
