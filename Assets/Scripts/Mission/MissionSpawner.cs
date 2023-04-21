@@ -7,6 +7,7 @@ public class MissionSpawner : MonoBehaviour
     public static MissionSpawner instance;
     [SerializeField] private GameObject _missionProvider;
     public Vector3[] missionLocation;
+    public List<GameObject> mission = new List<GameObject>();
     public bool SpawnNew;
     void MakeInstance()
     {
@@ -34,6 +35,7 @@ public class MissionSpawner : MonoBehaviour
             int randomNum = Random.Range(0, 10);
             Instantiate(_missionProvider, missionLocation[randomNum], Quaternion.identity);
             SpawnNew = false;
+            mission.Add(_missionProvider);
         }
     }
 }
