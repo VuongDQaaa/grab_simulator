@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4029331796345158521}
   - component: {fileID: 4029331796345158522}
   - component: {fileID: 4029331796345158523}
-  m_Layer: 7
+  m_Layer: 6
   m_Name: iconMiniMap
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -26,7 +26,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4029331796345158520}
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 10, z: 0}
+  m_LocalPosition: {x: 0, y: 20, z: 0}
   m_LocalScale: {x: 9, y: 9, z: 9}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -97,12 +97,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c7844992536bdf4fabc0042cd195471, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Mark: {fileID: 21300000, guid: dbd645a32c27dbe4d82555a346b55f66, type: 3}
-  Guild: {fileID: 21300000, guid: 174bcf6561a6f024e8e010194fbd6e9b, type: 3}
-  spriteRenderer: {fileID: 4029331796345158522}
   MinimapCam: {fileID: 0}
   MinimapSize: 95
   Player: {fileID: 0}
+  Mark: {fileID: 21300000, guid: dbd645a32c27dbe4d82555a346b55f66, type: 3}
+  Guild: {fileID: 21300000, guid: 174bcf6561a6f024e8e010194fbd6e9b, type: 3}
 --- !u!1 &4029331797294888240
 GameObject:
   m_ObjectHideFlags: 0
@@ -115,7 +114,7 @@ GameObject:
   - component: {fileID: 4029331797294888243}
   - component: {fileID: 4029331797294888242}
   - component: {fileID: 4029331797294888241}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: tarGetMission
   m_TagString: Untagged
   m_Icon: {fileID: 0}
