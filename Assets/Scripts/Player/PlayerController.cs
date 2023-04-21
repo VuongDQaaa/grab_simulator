@@ -4,89 +4,114 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    //đây là bản lỗi, a dùng bản 2 kia nhé
-    [Header("Component")]
-    [SerializeField] WheelCollider _frontWheel;
-    [SerializeField] WheelCollider _backWheel;
-    [Header("Player Setting")]
-    [SerializeField] float _acceleration = 500f; //Gia toc
-    // [SerializeField] float _brakeFore = 300f; //luc khi dap phanh
-    [SerializeField] float _maxTurnAngle = 30f; //goc quay xe
-    [SerializeField] float _turnSpeed = 1f;
-    [SerializeField] float _speed = 100f;
-    // private float _currentAcceleration  = 0f;
-    // private float _currentBrakeFore = 0f;
-    // private float _currentTurnAngle = 0f;
-    // private float _moveInput;
-    // private float _turnInput;
-    // public Vector3 _centerMass;
-    // private Rigidbody rb;
-    float _moveInput;
-    float _turnInput;
-    public List<Wheel> wheels;
-    Rigidbody rb;
-    private void Start() {
-        rb = GetComponent<Rigidbody>();
-    }
-    private void Update() {
-        GetInput();
-        // AnimateWheels();
-    }
-    public enum Axel{
-        Front,
-        Back
-    }
-    [System.Serializable]
-    public struct Wheel{
-        public GameObject wheelMess;
-        public WheelCollider wheelCollider;
-        public Axel axel;
-    }
-    void GetInput(){
-        _moveInput = Input.GetAxis("Vertical");
-        _turnInput = Input.GetAxis("Horizontal");
-    }
-    private void FixedUpdate() {
-        Moving();
-        Turning();
-        // AnimateWheels();
-        //brake
-        // if(Input.GetKey(KeyCode.Space)){
-        //     _currentBrakeFore = _brakeFore;
-        // }else{
-        //     _currentBrakeFore = 0f;
-        // }
-
-        // // _frontWheel.motorTorque = _currentAcceleration;
-        // // _backWheel.motorTorque = _currentAcceleration;
-
-        // _frontWheel.brakeTorque = _currentBrakeFore;
-        // _backWheel.brakeTorque = _currentBrakeFore;
-
-    }
-    void Moving(){
-        foreach(var _wheel in wheels){
-            //go forward and backward
-           _wheel.wheelCollider.motorTorque = _moveInput *_speed* _acceleration;
+	public WheelCollider frontLeftW, frontRightW;
+	public WheelCollider rearLeftW, rearRightW;
+	public Transform frontLeftT, frontRightT;
+	public Transform rearLeftT, rearRightT;
+	[SerializeField] private Rigidbody rb;
+	public GameObject _light;
+	[Header("Player Set")]
+	public float _maxSteerAngle = 30;
+	public float _motorForce = 50;
+	public float _brakeForce = 20;
+	private float _turnInput;
+	private float _moveInput;
+	private float _brakeInput;
+	private float _steeringAngle;
+	private float _currentbreakForce;
+	private bool isBreaking;
+	private bool islightOn;
+	public Vector3 centerOfMass;
+	[Header("Other")]
+	public ControllMode controll;
+	public enum ControllMode{
+        keyBoard,
+        TouchPad
+    };
+	private void Start() {
+		rb = GetComponentInChildren<Rigidbody>();
+		rb.centerOfMass = centerOfMass;
+	}
+	private void FixedUpdate()
+	{
+		GetInput();
+		Steer();
+		Accelerate();
+		UpdateWheelPoses();
+		_currentbreakForce = isBreaking ? _brakeForce : 0f;
+		if(isBreaking)
+			_light.SetActive(true);
+		else
+			_light.SetActive(false);
+        ApplyBreaking();
+	}
+	public void GetInput()
+	{
+		if(controll == ControllMode.keyBoard){
+            _moveInput = Input.GetAxis("Vertical");
+            _turnInput = Input.GetAxis("Horizontal");
+			isBreaking = Input.GetKey(KeyCode.Space);
         }
+	}
+	public void TouchMoveInput(float _input){
+        _moveInput = _input;
+        Debug.Log("move");
     }
-    void Turning(){
-        foreach(var _wheel in wheels){
-            if(_wheel.axel == Axel.Front){
-                var _turnAngle = _turnInput * _turnSpeed * _maxTurnAngle;
-                _wheel.wheelCollider.steerAngle = Mathf.Lerp(_wheel.wheelCollider.steerAngle, _turnAngle, 0.6f);
-            }
-        }
+    public void TouchTurnInput(float _input){
+        _turnInput = _input;
+        Debug.Log("turn");
     }
-    // void AnimateWheels()
-    // {
-    //     foreach(var wheel in wheels)
-    //     {
-    //         Quaternion rot;
-    //         Vector3 pos;
-    //         wheel.wheelCollider.GetWorldPose(out pos, out rot);
-    //         wheel.wheelMess.transform.position = pos;
-    //         wheel.wheelMess.transform.rotation = rot;
-    //     }
-    // }
+	public void TouchBrakeInput(float _input){
+		if(_input == 1)
+			isBreaking = true;
+		if(_input == 0)
+			isBreaking = false;
+        Debug.Log("brake");
+	}
+	private void ApplyBreaking() {
+		
+        frontRightW.brakeTorque = _currentbreakForce ;
+        frontLeftW.brakeTorque = _currentbreakForce ;
+        rearLeftW.brakeTorque = _currentbreakForce ;
+        rearRightW.brakeTorque = _currentbreakForce ;
+    }
+	private void Steer()
+	{
+		_steeringAngle = _maxSteerAngle * _turnInput;
+		frontLeftW.steerAngle = _steeringAngle;
+		frontRightW.steerAngle = _steeringAngle;
+	}
+
+	private void Accelerate()
+	{
+		// frontLeftW.motorTorque = _moveInput  * _motorForce;
+		// frontRightW.motorTorque = _moveInput  * _motorForce;
+		rearLeftW.motorTorque = _moveInput  * _motorForce;
+		rearRightW.motorTorque = _moveInput  * _motorForce;
+	}
+
+	private void UpdateWheelPoses()
+	{
+		UpdateWheelPose(frontLeftW, frontLeftT);
+		UpdateWheelPose(frontRightW, frontRightT);
+		UpdateWheelPose(rearLeftW, rearLeftT);
+		UpdateWheelPose(rearRightW, rearRightT);
+	}
+
+	private void UpdateWheelPose(WheelCollider _collider, Transform _transform)
+	{
+		Vector3 _pos = _transform.position;
+		Quaternion _quat = _transform.rotation;
+
+		_collider.GetWorldPose(out _pos, out _quat);
+
+		_transform.position = _pos;
+		_transform.rotation = _quat;
+	}
+
+	private void OnTriggerEnter(Collider other) {
+		// if(other.gameObject.tag =="car")
+		// 	PlayerHealth.instance.TakeDamage(20);
+	}
+
 }

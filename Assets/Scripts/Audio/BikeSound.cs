@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class BikeSound : MonoBehaviour
 {
@@ -16,16 +17,49 @@ public class BikeSound : MonoBehaviour
     private Rigidbody bikeRb;
     private AudioSource audioSource;
     public static BikeSound instance;
+    public Slider SliderCar;
+    public Image ImgBtnCar;
+    public Sprite spriteMute;
+    public Sprite spriteUnMute;
+    [SerializeField] private UnitsData LoadData;
     private void Awake() {
         if(instance == null)
             instance = this;
     }
     private void Start() {
         audioSource = GetComponent<AudioSource>();
-        bikeRb = GetComponent<Rigidbody>();
+        bikeRb = GetComponentInChildren<Rigidbody>();
+        SliderCar.value = LoadData.CarVolume;
+        SliderCar.onValueChanged.AddListener(delegate { OnSliderSoundChange(); });
+        if(LoadData.IsCarVolume == true) {
+            ImgBtnCar.sprite = spriteUnMute;
+        }else{
+            ImgBtnCar.sprite = spriteMute;
+        }
     }
     private void LateUpdate() {
         EngineSound();
+    }
+    private void Update() {
+        if(LoadData.IsCarVolume == false){
+            audioSource.volume = 0;
+        }else{
+            audioSource.volume = SliderCar.value / 100f;
+        }
+    } 
+    public void BtnMuteSound(){
+        LoadData.IsCarVolume = !LoadData.IsCarVolume;
+        if(LoadData.IsCarVolume){
+            ImgBtnCar.sprite = spriteUnMute;
+        }else{
+            ImgBtnCar.sprite = spriteMute;
+        }
+    }
+    private void OnSliderSoundChange()
+    {
+        // Update the volume of the audio source to match the value of the slider
+        audioSource.volume = SliderCar.value;
+        LoadData.CarVolume = (int)SliderCar.value;
     }
     private void EngineSound(){
         _pitchFromBike = bikeRb.velocity.magnitude;

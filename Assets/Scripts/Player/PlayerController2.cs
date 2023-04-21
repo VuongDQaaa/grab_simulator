@@ -15,11 +15,15 @@ public class PlayerController2 : MonoBehaviour
     [SerializeField] float _speed = 30;
     [SerializeField] float _brakeForce = 300;
     [Header("Component")]
-    [SerializeField] WheelCollider frontWheelCollider;
-    [SerializeField] WheelCollider backWheelCollider;
-    [SerializeField] Transform frontWheelTrans;
-    [SerializeField] Transform backWheelTrans;
-    [SerializeField] Animator animator;
+    [SerializeField] WheelCollider frontWheelColliderRight;
+    [SerializeField] WheelCollider frontWheelColliderLeft;
+    [SerializeField] WheelCollider backWheelColliderRight;
+    [SerializeField] WheelCollider backWheelColliderLeft;
+    [SerializeField] Transform frontWheelTransRight;
+    [SerializeField] Transform frontWheelTransLeft;
+    [SerializeField] Transform backWheelTransRight;
+    [SerializeField] Transform backWheelTransLeft;
+    // [SerializeField] Animator animator;
     [SerializeField] GameObject brakeLight;
     [SerializeField] AudioSource audioBrake;
     [SerializeField] AudioClip brakeSound;
@@ -52,7 +56,7 @@ public class PlayerController2 : MonoBehaviour
         _currentScore = _ScoreStart;
         scoreSO.value = _currentScore;
         GetInput();
-        SetAnimation();
+        // SetAnimation();
         //timer
         if(_timeValue > 0 ){
             _timeValue -= Time.deltaTime;
@@ -72,22 +76,24 @@ public class PlayerController2 : MonoBehaviour
         Moving();
         Turning();
         Braking();
-        UpdateWheel(frontWheelCollider,frontWheelTrans);
-        UpdateWheel(backWheelCollider,backWheelTrans);
+        UpdateWheel(frontWheelColliderRight,frontWheelTransRight);
+        UpdateWheel(frontWheelColliderLeft,frontWheelTransLeft);
+        UpdateWheel(backWheelColliderRight,backWheelTransRight);
+        UpdateWheel(backWheelColliderLeft,backWheelTransLeft);
     }
-    void SetAnimation(){
-        if(_turnInput <0){
-            animator.SetBool("turnLeft", true);
-            animator.SetBool("turnRight", false);
-        }else if(_turnInput > 0)
-        {
-            animator.SetBool("turnRight", true);
-            animator.SetBool("turnLeft", false);
-        }else{
-            animator.SetBool("turnRight", false);
-            animator.SetBool("turnLeft", false);
-        }
-    }
+    // void SetAnimation(){
+    //     if(_turnInput <0){
+    //         animator.SetBool("turnLeft", true);
+    //         animator.SetBool("turnRight", false);
+    //     }else if(_turnInput > 0)
+    //     {
+    //         animator.SetBool("turnRight", true);
+    //         animator.SetBool("turnLeft", false);
+    //     }else{
+    //         animator.SetBool("turnRight", false);
+    //         animator.SetBool("turnLeft", false);
+    //     }
+    // }
     public void PointDown(){
         if(_ScoreStart >= 0){
             scoreText.text = "Point Left: " + scoreSO.value; //đặt hiển thị
@@ -158,7 +164,6 @@ public class PlayerController2 : MonoBehaviour
              foreach(var _wheel in wheels){
                 _wheel.wheelCollider.brakeTorque = 0;
                 brakeLight.SetActive(false);
-                
             }
         }
     }
