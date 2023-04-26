@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+	public static PlayerController instance;
 	public WheelCollider frontLeftW, frontRightW;
 	public WheelCollider rearLeftW, rearRightW;
 	public Transform frontLeftT, frontRightT;
@@ -13,13 +14,14 @@ public class PlayerController : MonoBehaviour
 	[Header("Player Set")]
 	public float _maxSteerAngle = 30;
 	public float _motorForce = 50;
-	public float _brakeForce = 20;
+	public float _brakeForcePassive = 50000;
+	private float _brakeForce = Mathf.Infinity;
 	private float _turnInput;
 	private float _moveInput;
 	private float _brakeInput;
 	private float _steeringAngle;
 	private float _currentbreakForce;
-	private bool isBreaking;
+	public bool isBreaking;
 	private bool islightOn;
 	public Vector3 centerOfMass;
 	[Header("Other")]
@@ -28,6 +30,10 @@ public class PlayerController : MonoBehaviour
         keyBoard,
         TouchPad
     };
+	private void Awake() {
+		if(instance == null)
+			instance = this;
+	}
 	private void Start() {
 		rb = GetComponentInChildren<Rigidbody>();
 		rb.centerOfMass = centerOfMass;
@@ -38,13 +44,22 @@ public class PlayerController : MonoBehaviour
 		Steer();
 		Accelerate();
 		UpdateWheelPoses();
-		_currentbreakForce = isBreaking ? _brakeForce : 0f;
-		if(isBreaking)
+		// _currentbreakForce = isBreaking ? _brakeForce : 0f;
+		if(isBreaking){
 			_light.SetActive(true);
-		else
+			_currentbreakForce = _brakeForce;//phanh chủ động
+		}
+		else{
 			_light.SetActive(false);
+			//phanh bị động (để xử lí va chạm)
+			if(rearLeftW.motorTorque == 0 && _moveInput == 0)
+				_currentbreakForce = _brakeForcePassive;
+			else
+				_currentbreakForce = 0f;
+		}
         ApplyBreaking();
 	}
+	#region InputSetting
 	public void GetInput()
 	{
 		if(controll == ControllMode.keyBoard){
@@ -68,12 +83,15 @@ public class PlayerController : MonoBehaviour
 			isBreaking = false;
         Debug.Log("brake");
 	}
+	#endregion
+	#region carMovement
 	private void ApplyBreaking() {
 		
         frontRightW.brakeTorque = _currentbreakForce ;
         frontLeftW.brakeTorque = _currentbreakForce ;
         rearLeftW.brakeTorque = _currentbreakForce ;
         rearRightW.brakeTorque = _currentbreakForce ;
+		
     }
 	private void Steer()
 	{
@@ -84,12 +102,13 @@ public class PlayerController : MonoBehaviour
 
 	private void Accelerate()
 	{
-		// frontLeftW.motorTorque = _moveInput  * _motorForce;
-		// frontRightW.motorTorque = _moveInput  * _motorForce;
-		rearLeftW.motorTorque = _moveInput  * _motorForce;
-		rearRightW.motorTorque = _moveInput  * _motorForce;
+		frontLeftW.motorTorque = _moveInput  * _motorForce;
+		frontRightW.motorTorque = _moveInput  * _motorForce;
+		// rearLeftW.motorTorque = _moveInput  * _motorForce;
+		// rearRightW.motorTorque = _moveInput  * _motorForce;
 	}
-
+	#endregion
+	#region Wheel
 	private void UpdateWheelPoses()
 	{
 		UpdateWheelPose(frontLeftW, frontLeftT);
@@ -108,6 +127,7 @@ public class PlayerController : MonoBehaviour
 		_transform.position = _pos;
 		_transform.rotation = _quat;
 	}
+	#endregion
 
 	private void OnTriggerEnter(Collider other) {
 		// if(other.gameObject.tag =="car")
