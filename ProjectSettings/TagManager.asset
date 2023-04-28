@@ -3,7 +3,17 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Red
+  - Car
+  - Card
+  - Mission
+  - Pick Up
+  - Controller
+  - Destroy
+  - Wall
+  - hit1
+  - hit2
   layers:
   - Default
   - TransparentFX

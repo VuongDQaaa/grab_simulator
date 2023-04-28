@@ -12,7 +12,7 @@ public class PlayerHealth : MonoBehaviour
     public static PlayerHealth instance;
     [Header("Health")]
     [SerializeField] SO healthSO;
-    float health, maxHealth = 100;
+    public float health, maxHealth = 100;
     float lerpSpeed;
     private void Awake() {
         if(instance == null){
@@ -53,8 +53,7 @@ public class PlayerHealth : MonoBehaviour
     {
         if (health > 0)
             health -= damagePoints;
-        if(health <= 0)
-            Invoke("Delay", 1f);
+        
     }
     public void TakeHeal(float healingPoints)
     {

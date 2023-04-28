@@ -79,7 +79,7 @@ public class GamePlayUI : MonoBehaviour
 
     private void ShowLoseMenu()
     {
-        if (CurrentMission.instance.failed == true)
+        if (CurrentMission.instance.failed == true || PlayerHealth.instance.health <= 0)
         {
             _loseMenu.SetActive(true);
         }
