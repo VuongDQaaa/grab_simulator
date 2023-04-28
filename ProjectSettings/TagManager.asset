@@ -11,6 +11,7 @@ TagManager:
   - Car
   - Mission
   - Pick Up
+  - Card
   layers:
   - Default
   - TransparentFX

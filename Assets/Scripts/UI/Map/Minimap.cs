@@ -17,24 +17,17 @@ public class Minimap : MonoBehaviour
     public RectTransform missionMinimap;
     public Transform missionWorld;
     
-    
     [Header("Pickup")]
     public RectTransform pickUpMinimap;
     public Transform pickUpWorld;
 
-
     private float minimapRatiox;
     private float minimapRatioz;
-
-
-    /**/
-
 
     private void Awake()
     {
         CalculateMapRatio();
     }
-
 
     private void Update()
     {
@@ -43,9 +36,9 @@ public class Minimap : MonoBehaviour
             new Vector2((playerWorld.position.x - worldPoint_1.position.x) * minimapRatiox,
                         (playerWorld.position.z - worldPoint_1.position.z) * minimapRatioz);
 
-        if(MissionSpawner.instance.mission != null)
+        if(MissionSpawner.instance.missionData != null)
         {
-            missionWorld = MissionSpawner.instance.mission[0].transform;
+            missionWorld = MissionSpawner.instance.missionData[0].transform;
         }
         
         missionMinimap.anchoredPosition = 
@@ -59,8 +52,6 @@ public class Minimap : MonoBehaviour
                         (pickUpWorld.position.z - worldPoint_1.position.z) * minimapRatioz);  
     }
     
-    
-
     public void CalculateMapRatio()
     {
         /*
