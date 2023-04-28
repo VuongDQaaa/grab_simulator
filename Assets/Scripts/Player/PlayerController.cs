@@ -10,7 +10,8 @@ public class PlayerController : MonoBehaviour
 	public Transform frontLeftT, frontRightT;
 	public Transform rearLeftT, rearRightT;
 	[SerializeField] private Rigidbody rb;
-	public GameObject _light;
+	[SerializeField]private GameObject _light;
+	[SerializeField]private GameObject _backwardLight;
 	[Header("Player Set")]
 	public float _maxSteerAngle = 30;
 	public float _motorForce = 50;
@@ -22,7 +23,6 @@ public class PlayerController : MonoBehaviour
 	private float _steeringAngle;
 	private float _currentbreakForce;
 	public bool isBreaking;
-	private bool islightOn;
 	public Vector3 centerOfMass;
 	[Header("Other")]
 	public ControllMode controll;
@@ -57,6 +57,10 @@ public class PlayerController : MonoBehaviour
 			else
 				_currentbreakForce = 0f;
 		}
+		if(_moveInput == -1 && rearLeftW.motorTorque >= 0)
+			_backwardLight.SetActive(true);
+		else
+			_backwardLight.SetActive(false);
         ApplyBreaking();
 	}
 	#region InputSetting
@@ -132,6 +136,12 @@ public class PlayerController : MonoBehaviour
 	private void OnTriggerEnter(Collider other) {
 		// if(other.gameObject.tag =="car")
 		// 	PlayerHealth.instance.TakeDamage(20);
+	}
+	private void OnCollisionEnter(Collision other) {
+		if(other.collider){
+			PlayerHealth.instance.TakeDamage(20);
+			Debug.Log("Hit");
+		}
 	}
 
 }
