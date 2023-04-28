@@ -27,13 +27,9 @@ public class MissionManager : MonoBehaviour
         MakeInstance();
     }
 
-    private void Start()
-    {
-        entries = FileHandler.ReadListFromJson<MissionElement>(fileName);
-    }
-
     private void AddMissionToList()
     {
+        entries = FileHandler.ReadListFromJson<MissionElement>(fileName);
         entries.Add(new MissionElement(missionId, missionName, pickUpLocation, recieveLocation, gold, missionTime, isDoing, isCompleted));
         FileHandler.SaveToJSON<MissionElement>(entries, fileName);
     }

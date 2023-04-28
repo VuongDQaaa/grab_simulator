@@ -130,8 +130,11 @@ public class PlayerController : MonoBehaviour
 	#endregion
 
 	private void OnTriggerEnter(Collider other) {
-		// if(other.gameObject.tag =="car")
-		// 	PlayerHealth.instance.TakeDamage(20);
+		if(other.gameObject.tag =="car")
+		{
+			PlayerHealth.instance.TakeDamage(20);
+		}
+		 	
 	}
 
 }

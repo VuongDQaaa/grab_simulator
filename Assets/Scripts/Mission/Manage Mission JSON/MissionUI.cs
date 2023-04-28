@@ -36,21 +36,15 @@ public class MissionUI : MonoBehaviour
 
     private void OnEnable()
     {
-        if (uiElement.Count == 0 || doingMission == null || historyCard.Count == 0)
-        {
-            LoadMission();
-            UpdateDoingMission(_missionElements);
-            UpdateToDoMission(_missionElements);
-            UpdateHistory(_historyElements);
-        }
+        LoadMission();
+        UpdateDoingMission(_missionElements);
+        UpdateToDoMission(_missionElements);
+        UpdateHistory(_historyElements);
     }
 
     private void OnDisable()
     {
-        if (uiElement.Count != 0)
-        {
-            ResetInfor();
-        }
+        ResetInfor();
     }
 
     private void UpdateToDoMission(List<MissionElement> list)
@@ -192,6 +186,16 @@ public class MissionUI : MonoBehaviour
         }
     }
 
+    public void RemoveDoingMission(int missionId)
+    {
+        MissionElement el = _missionElements.FirstOrDefault(x => x.missionId == missionId);
+        if(el != null)
+        {
+            _missionElements.Remove(el);
+            FileHandler.SaveToJSON(_missionElements, _fileName);
+        }
+    }
+
     private void ResetInfor()
     {
         uiElement.Clear();
@@ -202,7 +206,6 @@ public class MissionUI : MonoBehaviour
             GameObject card = child.gameObject;
             Destroy(card);
         }
-
         foreach (Transform child in _doingElementWrapper.transform)
         {
             GameObject card = child.gameObject;

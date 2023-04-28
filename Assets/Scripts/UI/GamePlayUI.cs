@@ -9,8 +9,8 @@ using TMPro;
 public class GamePlayUI : MonoBehaviour
 {
     public static GamePlayUI instance;
-    [SerializeField] private Button _pauseButton, _resumeButton, _backButton, _getRewardButton, _restartButton, _quitButton, _acceptButton, _cancelButton, _missionsButton;
-    [SerializeField] private GameObject _pauseMenu, _winMenu, _loseMenu, _missionInfor, _missionsMenu;
+    [SerializeField] private Button _pauseButton, _resumeButton, _backButton, _getRewardButton, _restartButton, _cancelButton, _missionsButton;
+    [SerializeField] private GameObject _pauseMenu, _winMenu, _loseMenu, _missionInfor, _missionsMenu, _HPBar, _HPPlayer;
     [SerializeField] private TextMeshProUGUI _goldText, _missionName, _gold, _missionTime;
     [SerializeField] private string _fileName;
     public GameObject missionProvider;
@@ -36,6 +36,21 @@ public class GamePlayUI : MonoBehaviour
         DisplayGold();
         ShowMission();
         DisplayMissionInfor();
+        ShowHP();
+    }
+
+    private void ShowHP()
+    {
+        if (CurrentMission.instance.isStarted == true)
+        {
+            _HPBar.SetActive(true);
+            _HPPlayer.SetActive(true);
+        }
+        else
+        {
+            _HPBar.SetActive(false);
+            _HPPlayer.SetActive(false);
+        }
     }
 
     private void DisplayGold()
@@ -52,7 +67,7 @@ public class GamePlayUI : MonoBehaviour
 
     private void ShowMission()
     {
-        if(newMission == true)
+        if (newMission == true)
         {
             _missionInfor.SetActive(true);
         }
@@ -72,15 +87,10 @@ public class GamePlayUI : MonoBehaviour
 
     private void ShowWinMenu()
     {
-        if (CurrentMission.instance.isCompleted == true)
+        if (CurrentMission.instance.isCompleted == true && CurrentMission.instance.isStarted == true)
         {
             _winMenu.SetActive(true);
         }
-    }
-
-    public void AcceptButton()
-    {
-        CurrentMission.instance.spawnLocation = true;
     }
 
     public void CancelButton()
@@ -120,16 +130,8 @@ public class GamePlayUI : MonoBehaviour
         HistoryManager.instance.missionName = CurrentMission.instance.missionName;
         HistoryManager.instance.completeDate = DateTime.Now;
         HistoryManager.instance.AddHistoryToList();
-
         //Remove Doing mission
-        List<MissionElement> missions = FileHandler.ReadListFromJson<MissionElement>(_fileName);
-        MissionElement el = missions.FirstOrDefault(x => x.missionId == CurrentMission.instance.missionId);
-        if(el != null)
-        {
-            missions.Remove(el);
-            FileHandler.SaveToJSON(missions, _fileName);
-        }
-
+        MissionUI.instance.RemoveDoingMission(CurrentMission.instance.missionId);
         //Spawn new mission provider
         MissionSpawner.instance.SpawnNew = true;
         //Reset current mission
@@ -141,13 +143,6 @@ public class GamePlayUI : MonoBehaviour
     public void RestartButton()
     {
         CurrentMission.instance.RestartMission();
-        _loseMenu.SetActive(false);
-    }
-
-    public void QuitButton()
-    {
-        CurrentMission.instance.isCompleted = true;
-        MissionSpawner.instance.SpawnNew = true;
         _loseMenu.SetActive(false);
     }
 
