@@ -39,6 +39,7 @@ public class MissionManager : MonoBehaviour
     {
         if (entries.Count <= 3)
         {
+            MissionSpawner.instance.SpawnNew = true;
             GamePlayUI.instance.newMission = false;
             GameObject _missionProvider = GameObject.FindGameObjectWithTag("Mission");
             if (_missionProvider != null)

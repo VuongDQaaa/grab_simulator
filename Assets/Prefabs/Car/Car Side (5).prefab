@@ -358,6 +358,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   path: {fileID: 3729489091116470399, guid: 7bc166885b317dd4d9c6203e3dd6def2, type: 3}
+  _aICar: {fileID: 4067999967732956872}
   nodeDistance: 20
   maxSteerAngle: 60
   maxMotorTourque: 150000

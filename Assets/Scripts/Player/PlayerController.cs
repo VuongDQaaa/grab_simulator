@@ -141,7 +141,7 @@ public class PlayerController : MonoBehaviour
 		 	
 	}
 	private void OnCollisionEnter(Collision other) {
-		if(other.collider){
+		if(other.collider && CurrentMission.instance.isStarted == true){
 			PlayerHealth.instance.TakeDamage(20);
 			Debug.Log("Hit");
 		}

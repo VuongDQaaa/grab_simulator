@@ -14,6 +14,7 @@ public class CarEngine : MonoBehaviour
     public float maxBrakeTourque;
     public bool isBraking;
     public Vector3 centerOfMass;
+    public bool activeCheckDestroy;
     [SerializeField] private WheelCollider _wheelFL, _wheelFR, _wheelRL, _wheelRR;
     [Header("Sensor")]
     [SerializeField] private GameObject _frontSensor;
@@ -23,6 +24,7 @@ public class CarEngine : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        activeCheckDestroy = false;
         GetComponent<Rigidbody>().centerOfMass = centerOfMass;
         Transform[] pathTransforms = path.GetComponentsInChildren<Transform>();
         _nodes = new List<Transform>();
@@ -43,6 +45,7 @@ public class CarEngine : MonoBehaviour
         ApplySteer();
         Drive();
         CheckWayPointDistance();
+        DestroyAICar();
     }
 
     private void Sensors()
@@ -62,7 +65,7 @@ public class CarEngine : MonoBehaviour
             isBraking = false;
             hitDistance = 0;
         }
-        Braking();
+        //Braking();
     }
 
     private void ApplySteer()
@@ -90,6 +93,19 @@ public class CarEngine : MonoBehaviour
         }
     }
 
+    private void DestroyAICar()
+    {
+        float rearWeelSpeed = 2 * Mathf.PI * _wheelRL.rpm * 60 / 1000;
+        if (rearWeelSpeed >= 20)
+        {
+            activeCheckDestroy = true;
+        }
+        if (activeCheckDestroy == true && rearWeelSpeed <= 2)
+        {
+            StartCoroutine(DestroyCar());
+        }
+    }
+
     private void CheckWayPointDistance()
     {
         if (Vector3.Distance(transform.position, _nodes[_currentNode].position) < nodeDistance)
@@ -98,25 +114,31 @@ public class CarEngine : MonoBehaviour
         }
     }
 
-    private void Braking()
-    {
-        if (isBraking == true)
-        {
-            _wheelRL.brakeTorque = maxBrakeTourque;
-            _wheelRR.brakeTorque = maxBrakeTourque;
-        }
-        else
-        {
-            _wheelRL.brakeTorque = 0;
-            _wheelRR.brakeTorque = 0;
-        }
-    }
+    // private void Braking()
+    // {
+    //     if (isBraking == true)
+    //     {
+    //         _wheelRL.brakeTorque = maxBrakeTourque;
+    //         _wheelRR.brakeTorque = maxBrakeTourque;
+    //     }
+    //     else
+    //     {
+    //         _wheelRL.brakeTorque = 0;
+    //         _wheelRR.brakeTorque = 0;
+    //     }
+    // }
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.CompareTag("Destroy"))
+        if (other.CompareTag("Destroy"))
         {
             Destroy(gameObject);
         }
+    }
+
+    private IEnumerator DestroyCar()
+    {
+        yield return new WaitForSeconds(2);
+        Destroy(gameObject);
     }
 }

@@ -85,6 +85,7 @@ public class CurrentMission : MonoBehaviour
     public void ResetCurrentMission()
     {
         _timer.SetActive(false);
+        PlayerHealth.instance.health = 100;
         isStarted = false;
         isCompleted = false;
         spawnLocation = false;
@@ -94,6 +95,7 @@ public class CurrentMission : MonoBehaviour
     public void RestartMission()
     {
         _timer.SetActive(false);
+        PlayerHealth.instance.health = 100;
         isStarted = false;
         isCompleted = false;
         failed = false;
